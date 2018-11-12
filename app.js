@@ -250,7 +250,9 @@ io.on('connection', function(socket){
 			/**
 			 * if all ships are hit, send win/lose message
 			 */
+
 			if(enemy.takenHits >= 16) {
+
 				io.sockets.emit('win', enemy);
 				players = [];
 				turns = 0;
