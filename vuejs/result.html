@@ -1,0 +1,125 @@
+<html>
+<head>
+    <title>Result</title>
+    <link rel="stylesheet" href="/ResultPage/styleResult.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='http://fonts.googleapis.com/css?family=Orbitron:900' rel='stylesheet' type='text/css'>
+
+    <meta charset="UTF-8">
+
+    <!-- responsive -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- history table -->
+    <script src='//static.codepen.io/assets/editor/live/console_runner-ce3034e6bde3912cc25f83cccb7caa2b0f976196f2f2d52303a462c826d54a73.js'></script>
+    <script src='//static.codepen.io/assets/editor/live/css_reload-2a5c7ad0fe826f66e054c6020c99c1e1c63210256b6ba07eb41d7a4cb0d0adab.js'></script>
+    <meta charset='UTF-8'><meta name="robots" content="noindex">
+    <link rel="shortcut icon" type="image/x-icon" href="//static.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" />
+    <link rel="mask-icon" type="" href="//static.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
+    <link rel="canonical" href="https://codepen.io/nikhil8krishnan/pen/WvYPvv" />
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css'>
+</head>
+<body>
+
+    <div id="wrapper" class="col-sm-6">  Battleship 3d word
+            <canvas id="stage"></canvas>
+    </div>
+
+    <div>
+        
+        <section class="portfolio-experiment">
+                <a style="margin-bottom: 40px;" onclick="startOver()">
+                        <span class="text">start over</span>
+                        <span class="line -right"></span>
+                        <span class="line -top"></span>
+                        <span class="line -left"></span>
+                        <span class="line -bottom"></span>
+                    </a>
+            <br>
+            
+            <iframe src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2FBattleShip-Community-for-student-2134638156798454%2F&width=121&layout=button&action=like&size=large&show_faces=true&share=true&height=65&appId" 
+            width="121" height="65" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+
+        </section>
+    </div>
+
+    <script>
+        function startOver(){
+            location.href = 'index.html'
+        }
+    </script>
+
+    <!-- history table -->
+    <div >
+        <section style="font-family: monospace; margin-bottom:30px;">
+            <div class="tbl-header" >
+                <table cellpadding="0" cellspacing="0" border="0" id="tableBody1" style="font-size: 15px;">
+                        <caption style="color:white; font-size: 20px;">Your history</caption>
+                        <thead style="font-size: 18px;">
+                             <!--<th>Game</th>-->
+                            <th>Name</th>
+                            <th>Result</th>
+                        </thead>
+                            <script>
+                                document.write(localStorage.getItem('youscoreja'))
+                                settimeout(ff,1)
+                                function ff(){
+                                    document.write(localStorage.getItem('youscoreja2'))
+                                }
+                                
+                                //document.write(localStorage.getItem('winwinlist'))
+                            </script>
+                </table>
+            </div>
+        </section>
+    
+        <!-- <section style="font-family: monospace; margin-bottom:30px;">
+            <div class="tbl-header" >
+                <table cellpadding="0" cellspacing="0" border="0" id="tableBody2" style="font-size: 15px;">
+                        <caption style="color:white; font-size: 20px;">Loser</caption>
+                        <thead style="font-size: 18px;">
+                            <th>Game</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                        </thead>
+                            <script>
+                                document.write(localStorage.getItem('loseloselist'))
+                            </script>
+                </table>
+            </div>
+        </section> -->
+    </div>
+
+    <button onclick="resethist()">Reset History</button>
+    <script>
+        function resethist(){
+            localStorage.setItem('youscoreja',"<tr><td></td><td></td></tr>")
+            localStorage.setItem('youscoreja2',"<tr><td></td><td></td></tr>")
+            var tableme = document.getElementById("tableBody1")
+            for(var tbm = tableme.rows.length - 1; tbm > 0; tbm--){
+                tableme.deleteRow(tbm);
+            }
+
+            // localStorage.setItem('loseloselist',"<tr><td></td><td></td><td></td></tr>")
+            // localStorage.setItem('winwinlist',"<tr><td></td><td></td><td></td></tr>")
+            // var tablewin = document.getElementById("tableBody1")
+            // for(var tbw = tablewin.rows.length - 1; tbw > 0; tbw--){
+            //     tablewin.deleteRow(tbw);
+            // }
+            // var tablelose = document.getElementById("tableBody2")
+            // for(var tbl = tablelose.rows.length - 1; tbl > 0; tbl--){
+            //     tablelose.deleteRow(tbl);
+            // }
+        }
+    </script>
+    <script src='//static.codepen.io/assets/common/stopExecutionOnTimeout-41c52890748cd7143004e05d3c5f786c66b19939c4500ce446314d1748483e13.js'></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js'></script>
+    <script src="/ResultPage/indexResult.js"></script>
+    <script src="game.js"></script>
+    <script type="text/javascript" src="vue.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+<html>
+        <head>
+        <title>Selecting Avatar</title>
+        <link href="/SelectPage/styleSelect.css" rel="stylesheet">
+        <link href="/SelectPage/styleSelect2.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        </head>
+        <body style="background-color: black">
+                <!-- <div id = "pic1">  -->
+        
+                <center>
+                <h2>Please Select Your Avatar</h2>
+                <div id="firstpic">
+                    <img src="/image/ship.png" alt="pic1" width="180" height="180">
+                    <br>
+                        <a id="button1" class="button tick" onclick="selectAvatar()" style="margin-left:48.5%;"></a>
+                    <br>
+                </div>
+                <div id="secondpic">
+                    <br>
+                    <img src="/image/ship2.png" alt="pic2" width="180" height="180">
+                    <br>
+                        <a id="button2" class="button tick" onclick="selectAvatar2()" style="margin-left:48.5%;"></a>
+                    <br>
+                </div>
+                <div id="thirdpic">
+                    <br>
+                    <img src="/image/ship3.png" alt="pic3" width="180" height="180">
+                    <br>
+                        <a id="button3" class="button tick" onclick="selectAvatar3()" style="margin-left:48.5%;"></a>
+                    <br>
+                </div>
+                <br>
+                    <button class="back" onclick="startOver()">Back</button>
+                </center>
+              
+            <script>
+                function selectAvatar(){
+                    localStorage.setItem('bsavatar', 1);
+                        document.getElementById("firstpic").style.backgroundImage = "url('star.gif')"
+                        document.getElementById("secondpic").style.backgroundImage = "url('black.png')"
+                        document.getElementById("thirdpic").style.backgroundImage = "url('black.png')"
+                    
+                }
+                function selectAvatar2(){
+                    localStorage.setItem('bsavatar', 2);
+                        document.getElementById("firstpic").style.backgroundImage = "url('black.png')"
+                        document.getElementById("secondpic").style.backgroundImage = "url('star.gif')"
+                        document.getElementById("thirdpic").style.backgroundImage = "url('black.png')"
+                    
+                }
+                function selectAvatar3(){
+                    localStorage.setItem('bsavatar', 3);
+                    document.getElementById("firstpic").style.backgroundImage = "url('black.png')"
+                        document.getElementById("secondpic").style.backgroundImage = "url('black.png')"
+                        document.getElementById("thirdpic").style.backgroundImage = "url('star.gif')"
+                    
+                }
+                function setAvatar(color) {
+                socket.emit('avatar', { socketId: socket.id, color: color });
+                }
+    
+                function startOver(){
+                location.href = 'index.html'
+                }
+            </script>
+            
+        
+        </body>
+    </html>

@@ -1,0 +1,402 @@
+<html>
+<head>
+    <title>Battleship</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.2/css/bootstrap.min.css"
+          rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="style.css" rel="stylesheet">
+
+    <!-- instruction button -->
+    <script src='//static.codepen.io/assets/editor/live/console_runner-ce3034e6bde3912cc25f83cccb7caa2b0f976196f2f2d52303a462c826d54a73.js'></script>
+    <script src='//static.codepen.io/assets/editor/live/css_reload-2a5c7ad0fe826f66e054c6020c99c1e1c63210256b6ba07eb41d7a4cb0d0adab.js'></script>
+    <link rel="shortcut icon" type="image/x-icon" href="//static.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" />
+    <link rel="mask-icon" type="" href="//static.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
+    <link rel="canonical" href="https://codepen.io/peterdillon/pen/QbZaOw" />
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css'>
+
+    <!-- responsive -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- instruction button -->
+    <section class="open-ot-alert" id="Inst">How to play?</section>
+    <section class="more-ot-alert">
+      <span class="close-ot-alert">
+        <i class="fa fa-close"></i>
+      </span>
+      <p id='lg'>Instructions<br>1. Place your ships on the board to the left. This will be your board.<br>2. Wait for your enemy to place their ships.<br>3. Select a grid on the board to the right to guess the location of your enemy's ships. You have 10 seconds to guess.<br>4. Take turns with your enemy. You will win if you can sink all your enemy's ships.</p>
+    </section>
+
+    <script src='//static.codepen.io/assets/common/stopExecutionOnTimeout-41c52890748cd7143004e05d3c5f786c66b19939c4500ce446314d1748483e13.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+
+    <script>
+        function closeAlert() {
+            setTimeout(function() {
+                $(".more-ot-alert").fadeOut("fast");
+            }, 100);
+        }
+        function openAlert() {
+            $(".more-ot-alert").fadeIn("fast");
+            // IE8 animation polyfill
+            if ($("html").hasClass("lt-ie9")) {
+                var speed = 300;
+                var times = 3;
+                var loop = setInterval(anim, 300);
+                function anim() {
+                    times--;
+                    if (times === 0) {
+                        clearInterval(loop);
+                    }
+                    $(".more-ot-alert").animate({ left: 450 }, speed).animate({ left: 440 }, speed);
+                    //.stop( true, true ).fadeIn();
+                }
+                anim();
+            }
+        }
+        $(".close-ot-alert").on("click", function() {
+            closeAlert();
+        });
+
+        $(".open-ot-alert").on("click", function() {
+            var lg = document.getElementById('lg');
+            if(lang == 2){
+                lg.innerHTML = "วิธีเล่น<br>1. กำหนดตำแหน่งเรือบนกระดานด้านซ้าย กระดานนี้จะเป็นกระดานของคุณ<br>2. รอคู่ต่อสู้วางเรือให้เรียบร้อย<br>3.เลือกช่องในตารางทางด้านขวาเพื่อหาตำแหน่งเรือของคู่แข่งโดยมีเวลา 10 วินาที <br>4. สลับกันเล่นกับคู่ต่อสู้ ดดยคุณจะชนะต่อเมื่อเจอเรือทั้งหมดของคู่ต่อสู้";
+            }else{
+                lg.innerHTML = "Instructions<br>1. Place your ships on the board to the left. This will be your board.<br>2. Wait for your enemy to place their ships.<br>3. Select a grid on the board to the right to guess the location of your enemy's ships. You have 10 seconds to guess.<br>4. Take turns with your enemy. You will win if you can sink all your enemy's ships.";
+            }
+            openAlert();
+        });
+
+        $(document).keydown(function(e) {
+            if (e.keyCode == 27) {
+                closeAlert();
+            }
+            if (e.keyCode == 67) {
+                openAlert();
+            } // C is for click?
+        });
+    </script>
+
+    <!-- game -->
+    <p id="sth" style="display:none"></p>
+    
+    <center id="battleshipTitle" style="color: aliceblue"><h1>Battle ship</h1></center>
+
+    <!-- emoji -->
+    <div id="emoji-show" style="position: absolute;">
+        <script>
+            function emoji1(){
+                document.getElementById("emoji-show").innerHTML = "<h4>Enemy : </h4><img src=\"/image/thinking.png\" width=\"80\" height=\"80\">"
+                setTimeout(emotime, 2000)
+            }
+            function emoji2(){
+                document.getElementById("emoji-show").innerHTML = "<h4>Enemy : </h4><img src=\"/image/crying.png\" width=\"80\" height=\"80\">"
+                setTimeout(emotime, 2000)
+            }
+            function emoji3(){
+                document.getElementById("emoji-show").innerHTML = "<h4>Enemy : </h4><img src=\"/image/haha.png\" width=\"80\" height=\"80\">"
+                setTimeout(emotime, 2000)
+            }
+            function emotime(){
+                document.getElementById("emoji-show").innerHTML = "&nbsp"
+            }
+        </script>
+    </div>
+
+    <center>
+        <script>
+            if(localStorage.getItem('bsavatar')==2){
+                document.write("<img src=\"/image/ship2.png\" alt=\"pic2\" width=\"180\" height=\"180\">")
+            }
+            else if(localStorage.getItem('bsavatar')==3){
+                document.write("<img src=\"/image/ship3.png\" alt=\"pic3\" width=\"180\" height=\"180\">")
+            }
+            else{
+                document.write("<img src=\"/image/ship.png\" alt=\"pic1\" width=\"180\" height=\"180\">")
+            }
+        </script>
+    </center>
+
+    <!-- player name part -->
+    <center><h3 id="player-name"></h3></center>
+    <script> 
+        var person 
+        function myFunction() {
+            var txtt;
+            var person = prompt("Please enter your name:", "Player");
+            if (person == null || person == "") {
+                if(lang == 2){
+                    txtt = "ยูเซอร์ออกจากเกม";
+                }else{
+                    txtt = "User cancelled the prompt.";
+                }
+            } else {
+                if(lang == 2){
+                    txtt = "สวัสดี, " + person;
+                    alert("ยินดีต้อนรับ, "+person+"!")
+                }else{
+                    txtt = "Hello, " + person;
+                    alert("Welcome, "+person+"!")
+                }
+                
+                document.getElementById("sth").innerHTML = person
+                socket.emit('getnamenow',person)
+            }
+            document.getElementById("player-name").innerHTML = txtt;
+        }
+    </script>
+
+    <!-- playing part -->
+    <div id="game-room">
+        <div id="battleship">
+            <div id="msg" style="text-align: center;">
+                <h4>{{statusMessage}}</h4>
+            </div>
+            <div id="ready">
+                <p id="your-name-on-board" style="color:darkgray">your board: <span v-show="isReady" style="background-color: green;"><font color="green"> Ready</font></span><span v-else style="background-color: red;"><font color="red">Not ready!</font></span></p>
+            </div>
+
+            <div id="ready2">
+                    <p style="color:darkgray;">enemy board: <span v-show="enemyReady" style="background-color: green;"><font color="green"> Ready</font></span><span v-else style="background-color: red;"><font color="red">Not ready!</font></span></p>
+            </div>
+            <center><h3 id="score-bar">Opponent's score : 0 | Your score : 0 </h3></center>
+            <center><h3 id="first-player"></h3></center>
+
+            <div id="boards">
+
+                <board :columns="8" :rows="8" id="boardtemp"></board>
+
+                <template id="board-template">
+                    <table border="1">
+                        <tr v-for="n in rows">
+                            <template v-for="i in columns">
+                                <td @click="placeTheShip($event)" data-coordination="{{ n == 0 ? i : n + '' +i}}"
+                                    v-on:mouseleave="setDef($event)" v-on:mouseover="changeStyle($event)" class="tile"></td>
+                            </template>
+                        </tr>
+                    </table>
+                </template>
+                
+                <template id="enemyBoard-template">
+                    <table border="1">
+                        <tr v-for="n in rows">
+                            <template v-for="i in columns">
+                            <td @click="fire($event)" data-enemyCoordination="{{ n == 0 ? i : n + '' +i}}"
+                                data-hittable="true" class="tile"></td>
+                            </template>
+                        </tr>
+                    </table>
+                </template>
+
+                <enemy-board :columns="8" :rows="8" id="boardtemp2"></enemy-board>
+                <br>
+            </div>
+
+            <div id="buttons" v-for="ship in ships" class="col-xs-6">
+                <p style="color: white; margin-left: 10%">
+                    &nbsp
+                    {{ship.type}} <br>{{ship.available}}<br>
+                    <button @click="setChosenShip(ship)" :disabled="ship.available == 0"
+                            type="button" style="color: black">&nbsp&nbsp
+                    </button>
+                </p>
+            </div>
+
+            <div>
+                    <button @click="rotated =! rotated" :disabled="ships.available == 0" type="button" id="rotate" style="background-color: transparent; border-color: transparent; "><img src="/image/rotate2.png" width="40" height="40"></button>                   
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- reset the game -->
+    <div id="resetter">
+            <button onclick="resetTheGame()" type="button" id="resett">Reset</button>
+            <script> 
+                function resetTheGame() {
+                    window.location.reload();
+                    var ret = true;
+                    socket.emit('reset', ret);
+                    // window.location.reload();
+                    // alert('Reset');
+                }
+            </script>
+    </div>
+
+    <!-- timer -->
+    <div>
+        <center><h3 id="the-timer" style="margin-top:20px"></h3></center>
+        <div id="myProgressBar" style="width: 100%;background-color: #ddd;">
+            <div id="myBar" style="width: 100%;height: 30px;background-color: rgb(161, 199, 162);"></div>
+        </div>
+    </div>
+
+    <!-- emoji sending -->
+    <h5 id="sendemoji">Send Emoji to opponent!</h5>
+    <button onclick="think()" id="thinking" style="background-color: transparent; border-color: transparent; "><img src="/image/thinking.png" width="80" height="80"></button>
+    <button onclick="cry()" id="crying" style="background-color: transparent; border-color: transparent; "><img src="/image/crying.png" width="80" height="80"></button>
+    <button onclick="ha()" id="haha" style="background-color: transparent; border-color: transparent; "><img src="/image/haha.png" width="80" height="80"></button>
+
+    <br>
+    <script>
+        function think(){
+            document.getElementById("thinking").style.backgroundColor = "blue"
+            setTimeout(clickemo1, 200)
+           socket.emit('sendemoji',"thinkk")
+        }
+        function cry(){
+            document.getElementById("crying").style.backgroundColor = "blue"
+            setTimeout(clickemo2, 200)
+          socket.emit('sendemoji',"cryy")
+        }
+        function ha(){
+            document.getElementById("haha").style.backgroundColor = "blue"
+            setTimeout(clickemo3, 200)
+            socket.emit('sendemoji',"haa")
+        }
+        function clickemo1(){
+            document.getElementById("thinking").style.backgroundColor = "transparent"
+        }
+        function clickemo2(){
+            document.getElementById("crying").style.backgroundColor = "transparent"
+        }
+        function clickemo3(){
+            document.getElementById("haha").style.backgroundColor = "transparent"
+        }
+    </script>
+
+    <!-- number of client -->
+    <div id="numonline" style="margin-top: 10px">
+        <h5 id="onlineclients1">Online Clients</h5>
+        <li class="list-group-item" id="list-client" style="background-color: black ;border-width: 1px ;border-color: whitesmoke;">
+            <ul id="client-names" style="background-color: black;height: 100px;overflow: auto;color: white;">&nbsp</ul>
+        </li>
+    </div>
+
+    <!-- chat feature -->
+    <h5 id="chatbox">Chat Box</h5>
+    <li class="list-group-item" id="messages-list" style="background-color: black ;border-width: 1px ;border-color: whitesmoke;">
+        <ul id="messages" style="background-color: black ;height: 100px;overflow: auto;color: white;">&nbsp</ul>
+    </li>
+    <input id="txt" type="text" style="background-color: lightgray ;">
+    <button id="sendbutton" onclick="sendchat()">send</button>
+    <script>
+        var allmsg = ""
+        var elementt = document.getElementById("messages");
+        function sendchat(){
+            //emit message to socket
+            socket.emit('chat message',document.getElementById("txt").value);
+            allmsg = allmsg+'<br>'+"You: "+document.getElementById("txt").value;
+            document.getElementById("messages").innerHTML=allmsg
+            elementt.scrollTop = elementt.scrollHeight;
+            document.getElementById("txt").value = ""
+        }
+    </script>
+
+    <!-- change color -->
+    <button id="myBtn" onclick="changecol()">Change Background Color</button>
+    <script>
+            function changecol(){
+            var r = Math.floor(Math.random() * 256)
+            var g = Math.floor(Math.random() * 256)
+            var b = Math.floor(Math.random() * 256)
+            console.log(r, g, b)
+            var color = "rgb" + "(" + r + "," + g + "," + b + ")"
+            console.log(color)
+    
+            document.getElementById("boardtemp").style.background = color
+            document.getElementById("boardtemp2").style.background = color
+            }
+    </script>
+
+    <!-- back button -->
+    <button id="backbutton" type="button" onclick="startOver()">Back</button>
+    <script>
+        function startOver(){
+            location.href = 'index.html'
+            var ret = true;
+            socket.emit('back', ret);
+        }
+    </script>
+
+    <!-- background music -->
+    <div align="right">
+        <audio controls autoplay loop>
+                <source src="/audio/pirate.mp3">
+        </audio>
+    </div>
+
+    <!-- background -->
+    <style>
+        body{
+            background-image: url('water.gif');
+            background-size:50%;
+        }
+    </style>
+
+    <!-- change language -->
+
+    <button id="myBtn2" onclick="changelang()">Thai</button>
+    <button id="myBtn3" onclick="changelangback()">English</button>
+    <script>
+        var lang = 0
+        function changelang(){
+            lang = 2
+            document.getElementById("battleshipTitle").innerHTML="เรือรบมหาประลัย!";
+            document.getElementById("score-bar").innerHTML = "คะแนนคู่ต่อสู้: 0 | คะแนนของคุณ: 0";
+            document.getElementById("Inst").innerHTML="วิธีเล่น";
+            document.getElementById("player-name").innerHTML = "สวัสดี, " + person;
+            document.getElementById("chatbox").innerHTML="กล่องสนทนา";
+            document.getElementById("sendbutton").innerHTML="ส่ง";
+            document.getElementById("myBtn").innerHTML="เปลี่ยนสีตาราง";
+            document.getElementById("sendemoji").innerHTML="ส่งอีโมจิให้คู่ต่อสู้";
+            document.getElementById("onlineclients1").innerHTML="ผู้เล่นที่กำลังออนไลน์"
+            document.getElementById("backbutton").innerHTML="กลับ"
+            document.getElementById("resett").innerHTML="รีเซ็ท"
+            
+        }
+        function changelangback(){
+            lang = 0
+            document.getElementById("battleshipTitle").innerHTML="Battleship"
+            document.getElementById("score-bar").innerHTML = "Opponent's score : 0 | Your score : 0"
+            document.getElementById("Inst").innerHTML="Instructions"
+            document.getElementById("player-name").innerHTML = "Hello, " + person
+            document.getElementById("chatbox").innerHTML="Chat Box"
+            document.getElementById("sendbutton").innerHTML="Send"
+            document.getElementById("myBtn").innerHTML="Change Background Color"
+            document.getElementById("sendemoji").innerHTML="Send Emoji to Opponent";
+            document.getElementById("onlineclients1").innerHTML="Online Clients"
+            document.getElementById("backbutton").innerHTML="Back"
+            document.getElementById("resett").innerHTML="reset"
+        }
+    </script>
+    
+    <!-- <script>
+        var lang = 0
+        function changelangback(){
+            lang = 0
+            document.getElementById("battleshipTitle").innerHTML="Battleship"
+            document.getElementById("score-bar").innerHTML = "Opponent's score : 0 | Your score : 0"
+            document.getElementById("Inst").innerHTML="Instructions"
+            document.getElementById("player-name").innerHTML = "Hello, " + person
+            //document.getElementById("choosebutton").innerHTML="เลือก"
+            document.getElementById("chatbox").innerHTML="Chat Box"
+            document.getElementById("sendbutton").innerHTML="Send"
+            document.getElementById("myBtn").innerHTML="Change Background Color"
+        }
+    </script> -->
+
+</body>
+<script type="text/javascript" src="vue.min.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script type="text/javascript" src="game.js"></script>
+<script src="main.js"></script>
+
+</html>
